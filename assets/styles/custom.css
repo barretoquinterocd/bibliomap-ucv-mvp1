@@ -1,0 +1,72 @@
+/* ============================================================
+   BiblioMap UCV — Estilos visuales MVP 1.0
+   Identidad: BiblioMap / BiblioIntel / LEGIN
+   ============================================================ */
+
+.main-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0B2E59;
+    margin-bottom: 0rem;
+}
+
+.main-subtitle {
+    font-size: 1.15rem;
+    color: #7A0C0C;
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+}
+
+.institutional-note {
+    font-size: 0.95rem;
+    color: #444444;
+    margin-top: 0.5rem;
+}
+
+.small-caption {
+    font-size: 0.82rem;
+    color: #666666;
+    text-align: center;
+}
+
+.section-box {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #E6E6E6;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.footer-text {
+    font-size: 0.8rem;
+    color: #666666;
+    text-align: center;
+}
+
+.warning-text {
+    font-size: 0.9rem;
+    color: #444444;
+}
+
+/* Ajustes generales de Streamlit */
+
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+h1, h2, h3 {
+    color: #0B2E59;
+}
+
+hr {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Colores institucionales de referencia:
+   Azul BiblioMap/BiblioIntel: #0B2E59
+   Rojo UCV/FACES/CEAP: #8B0D0D
+   Dorado LEGIN: #D9A21B
+   Gris texto: #333333
+*/

@@ -1,0 +1,37 @@
+# Entorno virtual
+.venv/
+venv/
+env/
+
+# Caché Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.log
+
+# Cachés
+.cache/
+
+# Reportes generados automáticamente
+data/exports/*.html
+data/exports/*.md
+data/exports/*.pdf
+
+# Evitar archivos de prueba pesados o privados
+*.zip
