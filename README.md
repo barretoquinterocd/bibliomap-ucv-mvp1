@@ -1,4 +1,9 @@
 # BiblioMap — MVP 1.0
+## Acceso público
+
+La versión desplegada del MVP 1.0 está disponible en:
+
+https://bibliomap-ucv-mvp1.streamlit.app
 
 **Mapea la ciencia, encuentra brechas, conecta con el mundo.**
 
