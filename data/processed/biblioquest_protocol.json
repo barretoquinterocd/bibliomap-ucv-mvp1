@@ -1,0 +1,183 @@
+{
+  "researcher_name": "Investigador BiblioIntel",
+  "project_title": "Protocolo inicial de investigacion bibliometrica",
+  "tentative_topic": "Inteligencia artificial y creatividad cientifica",
+  "research_area": "Gestion de investigacion y desarrollo",
+  "generative_situation": "Se observa un crecimiento del debate academico sobre inteligencia artificial y creatividad, pero con posible dispersion conceptual, diferencias regionales y vacios sobre su aplicacion en la produccion de conocimiento cientifico.",
+  "scientific_curiosity": "Comprender como se ha configurado el campo y que tendencias, actores, regiones y brechas aparecen en la literatura cientifica.",
+  "cognitive_purpose": "Orientar una investigacion bibliometrica que permita comprender la estructura del campo y apoyar la construccion de una agenda futura.",
+  "transformative_projection": "Transformar la evidencia bibliometrica en rutas investigativas, preguntas emergentes y oportunidades de produccion cientifica.",
+  "study_event": "Produccion cientifica, estructura tematica, redes y brechas sobre inteligencia artificial y creatividad.",
+  "unit_of_analysis": "Publicaciones cientificas, autores, instituciones, paises, fuentes, palabras clave y citas.",
+  "context": "Literatura academica recuperada desde bases bibliograficas abiertas y/o indexadas.",
+  "temporality": "2015-2026",
+  "general_objective": "Analizar la estructura cientifica, tematica y evolutiva de la produccion academica sobre inteligencia artificial y creatividad durante el periodo 2015-2026, a fin de identificar tendencias, actores, brechas y oportunidades de investigacion futura.",
+  "specific_objectives": [
+    "Caracterizar la produccion cientifica recuperada por ano, fuente, tipo documental y citas.",
+    "Identificar los principales autores, instituciones, paises y fuentes vinculados al campo.",
+    "Analizar patrones tematicos y posibles redes de relacion entre terminos, autores y documentos.",
+    "Detectar brechas preliminares, areas poco visibles y oportunidades de investigacion futura."
+  ],
+  "main_question": "Como se estructura y evoluciona la produccion cientifica sobre inteligencia artificial y creatividad durante el periodo 2015-2026?",
+  "specific_questions": [
+    "Cual es la evolucion temporal de la produccion cientifica del campo?",
+    "Que autores, instituciones, paises y fuentes concentran mayor visibilidad?",
+    "Que tendencias tematicas y patrones de relacion aparecen en los metadatos recuperados?",
+    "Que brechas preliminares y oportunidades de investigacion futura pueden identificarse?"
+  ],
+  "expected_results": "Mapa preliminar del campo, indicadores de desempeno, tendencias, actores relevantes, brechas preliminares y agenda inicial de investigacion.",
+  "bibliometric_justification": "La bibliometria es pertinente porque permite analizar de manera estructurada la produccion cientifica, identificar patrones de crecimiento, actores, fuentes, citacion, tendencias tematicas y vacios de investigacion.",
+  "objective_question_data_analysis_fit": "El objetivo general se relaciona con preguntas sobre estructura, evolucion y brechas; estas preguntas requieren metadatos bibliograficos, analisis descriptivo, mapas, rankings, redes e interpretacion critica.",
+  "intorno": "Necesidad del investigador de formular un estado del arte riguroso y una agenda doctoral pertinente.",
+  "entorno": "Produccion cientifica visible sobre IA, creatividad, conocimiento y educacion superior.",
+  "extorno": "Aportes posibles desde cienciometria, gestion de I+D, filosofia de la ciencia y estudios sobre IA.",
+  "support": "BiblioIntel, OpenAlex, repositorio GitHub, Streamlit, reportes reproducibles.",
+  "sustenance": "Marco metodologico HOMI, bibliometria, bibliometrologia y paradigma inteligentizador.",
+  "sustainability": "Vigilancia cientifica, actualizacion del corpus, mejora continua y validacion humana.",
+  "notes": "",
+  "created_at": "2026-06-10T17:10:28",
+  "module": "BiblioQuest",
+  "slogan": "De la observacion al objetivo",
+  "methodological_note": "Basado en la metodologia HOMI: sinergia de los aportes intelectuales de Hurtado de Barrera sobre formulacion holistica de objetivos de investigacion; Ozturk, Kocaman y Kanbach sobre diseno de investigacion bibliometrica; y Mirabal Gonzalez sobre I2E, A3D y 3S. El paradigma inteligentizador se incorpora como marco conceptual propio en desarrollo, sin referencia APA formal por ahora.",
+  "diagnostics": {
+    "objective_validation": {
+      "score": 100,
+      "status": "solido",
+      "detected_level": {
+        "detected_verb": "analizar",
+        "level": "aprehensivo",
+        "suggested_research_types": [
+          "analitica",
+          "comparativa"
+        ],
+        "description": "Nivel orientado a descomponer, relacionar o comparar componentes del evento de estudio.",
+        "status": "detected"
+      },
+      "checks": [
+        {
+          "criterion": "Existe objetivo general",
+          "ok": true
+        },
+        {
+          "criterion": "Tiene desarrollo suficiente",
+          "ok": true
+        },
+        {
+          "criterion": "Inicia con verbo cognitivo compatible con nivel de objetivo",
+          "ok": true
+        },
+        {
+          "criterion": "No se limita a una actividad tecnica",
+          "ok": true
+        },
+        {
+          "criterion": "Sugiere evento de estudio bibliometrico",
+          "ok": true
+        },
+        {
+          "criterion": "Incluye temporalidad o periodo",
+          "ok": true
+        },
+        {
+          "criterion": "Declara finalidad cognitiva o uso esperado",
+          "ok": true
+        }
+      ],
+      "recommendations": []
+    },
+    "ozturk_fit": {
+      "score": 100.0,
+      "status": "listo_para_bibliosearch",
+      "checks": [
+        {
+          "criterion": "Objetivo de investigacion declarado",
+          "ok": true
+        },
+        {
+          "criterion": "Resultados esperados declarados",
+          "ok": true
+        },
+        {
+          "criterion": "Pregunta principal declarada",
+          "ok": true
+        },
+        {
+          "criterion": "Preguntas especificas declaradas",
+          "ok": true
+        },
+        {
+          "criterion": "Justificacion del uso de bibliometria",
+          "ok": true
+        },
+        {
+          "criterion": "Ajuste objetivo-pregunta-datos-analisis-interpretacion",
+          "ok": true
+        }
+      ],
+      "recommendations": []
+    },
+    "mirabal_i2e_a3d_s3": {
+      "intorno": "Necesidad del investigador de formular un estado del arte riguroso y una agenda doctoral pertinente.",
+      "entorno": "Produccion cientifica visible sobre IA, creatividad, conocimiento y educacion superior.",
+      "extorno": "Aportes posibles desde cienciometria, gestion de I+D, filosofia de la ciencia y estudios sobre IA.",
+      "a3d": {
+        "agil": "El protocolo debe permitir iteraciones rapidas entre objetivo, busqueda, corpus y lectura critica.",
+        "digital": "El estudio se apoya en metadatos, bases academicas, software bibliometrico y trazabilidad digital.",
+        "disruptiva": "Transformar la evidencia bibliometrica en rutas investigativas, preguntas emergentes y oportunidades de produccion cientifica.",
+        "diferenciadora": "La diferenciacion dependera de la claridad del objetivo, la calidad del corpus y la interpretacion humana validada."
+      },
+      "s3": {
+        "soporte": "BiblioIntel, OpenAlex, repositorio GitHub, Streamlit, reportes reproducibles.",
+        "sustento": "Marco metodologico HOMI, bibliometria, bibliometrologia y paradigma inteligentizador.",
+        "sostenimiento": "Vigilancia cientifica, actualizacion del corpus, mejora continua y validacion humana."
+      }
+    },
+    "novelty_uncertainty": {
+      "novelty_score": 80,
+      "novelty_level": "alta",
+      "uncertainty_score": 25,
+      "uncertainty_level": "baja",
+      "detected_signals": [
+        "brecha_o_vacio",
+        "emergencia",
+        "region_o_contexto",
+        "transformacion"
+      ],
+      "warning": "La novedad cientifica no queda certificada por BiblioQuest. Esta estimacion es preliminar y debe validarse con busqueda sistematica, lectura critica y contraste experto."
+    },
+    "objective_operationalization": [
+      {
+        "objective_number": "1",
+        "specific_objective": "Caracterizar la produccion cientifica recuperada por ano, fuente, tipo documental y citas.",
+        "estimated_achievement": "Determinar evidencias e indicadores asociados al logro parcial del objetivo.",
+        "vision": "Comprender como este objetivo contribuye al objetivo general.",
+        "visualization": "Tabla, grafico, matriz, mapa o red segun corresponda.",
+        "possible_evidence": "Metadatos bibliometricos, resultados descriptivos, redes, tendencias o lectura critica."
+      },
+      {
+        "objective_number": "2",
+        "specific_objective": "Identificar los principales autores, instituciones, paises y fuentes vinculados al campo.",
+        "estimated_achievement": "Determinar evidencias e indicadores asociados al logro parcial del objetivo.",
+        "vision": "Comprender como este objetivo contribuye al objetivo general.",
+        "visualization": "Tabla, grafico, matriz, mapa o red segun corresponda.",
+        "possible_evidence": "Metadatos bibliometricos, resultados descriptivos, redes, tendencias o lectura critica."
+      },
+      {
+        "objective_number": "3",
+        "specific_objective": "Analizar patrones tematicos y posibles redes de relacion entre terminos, autores y documentos.",
+        "estimated_achievement": "Determinar evidencias e indicadores asociados al logro parcial del objetivo.",
+        "vision": "Comprender como este objetivo contribuye al objetivo general.",
+        "visualization": "Tabla, grafico, matriz, mapa o red segun corresponda.",
+        "possible_evidence": "Metadatos bibliometricos, resultados descriptivos, redes, tendencias o lectura critica."
+      },
+      {
+        "objective_number": "4",
+        "specific_objective": "Detectar brechas preliminares, areas poco visibles y oportunidades de investigacion futura.",
+        "estimated_achievement": "Determinar evidencias e indicadores asociados al logro parcial del objetivo.",
+        "vision": "Comprender como este objetivo contribuye al objetivo general.",
+        "visualization": "Tabla, grafico, matriz, mapa o red segun corresponda.",
+        "possible_evidence": "Metadatos bibliometricos, resultados descriptivos, redes, tendencias o lectura critica."
+      }
+    ]
+  }
+}
