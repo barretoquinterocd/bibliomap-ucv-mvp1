@@ -1,5 +1,7 @@
 from pathlib import Path
 from typing import Optional
+from collections import Counter
+import re
 import sys
 
 import pandas as pd
@@ -72,11 +74,19 @@ BIBLIOQUEST_DOCX_PATH = EXPORTS_DIR / "biblioquest_report.docx"
 BIBLIOQUEST_PDF_PATH = EXPORTS_DIR / "biblioquest_report.pdf"
 
 REFERENCE_NOTE = (
-    "Desarrollo de LEGIN basado en el enfoque planteado en el artículo "
-    "\"How to design bibliometric research: an overview and proposal\" "
-    "de Oğuzhan Öztürk, Rıdvan Kocaman y Dominik K. Kanbach, "
-    "Review of Managerial Science (2024) 18:3333–3361. "
-    "https://doi.org/10.1007/s11846-024-00738-0"
+    "<strong>Fundamentos metodológicos y conceptuales de BiblioIntel/BiblioMap:</strong><br>"
+    "Hurtado de Barrera, J. (2014). <em>Cómo formular objetivos de investigación: "
+    "Un acercamiento desde la investigación holística</em>. Quirón Ediciones.<br>"
+    "Öztürk, O., Kocaman, R., & Kanbach, D. K. (2024). "
+    "How to design bibliometric research: An overview and a framework proposal. "
+    "<em>Review of Managerial Science, 18</em>(11), 3333–3361. "
+    "doi:10.1007/s11846-024-00738-0<br>"
+    "Mirabal González, J. F. (s. f.). <em>El árbol para la innovación: "
+    "Transformando la empresa a la economía digital</em>. OEM.<br>"
+    "Barreto et al. (en desarrollo). <em>Paradigma inteligentizador: "
+    "Sinergia de Inteligencias humano-ciencia-inteligencia artificial-creatividad "
+    "para la transformación del conocimiento investigativo</em>. "
+    "Manuscrito doctoral en preparación."
 )
 
 
@@ -436,7 +446,7 @@ def page_biblioquest() -> None:
         )
 
     with tabs[1]:
-        st.markdown("### Formulación metodológica según Hurtado")
+        st.markdown("### Formulación metodológica")
 
         study_event = st.text_area(
             "Evento de estudio",
@@ -667,6 +677,266 @@ def page_biblioquest() -> None:
                 st.markdown(md_path.read_text(encoding="utf-8"))
 
 
+
+# ============================================================
+# Keywords / palabras clave para exportación
+# ============================================================
+
+KEYWORD_STOPWORDS = {
+    # English
+    "about", "above", "across", "after", "again", "against", "also", "among", "analysis",
+    "and", "another", "because", "been", "before", "being", "between", "both", "can",
+    "could", "data", "during", "each", "from", "further", "have", "having", "into",
+    "more", "most", "other", "over", "paper", "perspective", "perspectives", "research",
+    "result", "results", "study", "studies", "such", "than", "that", "their", "there",
+    "these", "this", "through", "under", "using", "were", "what", "when", "where",
+    "which", "while", "with", "within", "without", "would",
+    # Spanish
+    "ademas", "alguna", "algunas", "algunos", "ante", "aqui", "cada", "como",
+    "contra", "cual", "cuando", "desde", "donde", "durante", "entre", "esta",
+    "estas", "este", "estos", "hacia", "hasta", "investigacion", "menos", "para",
+    "pero", "porque", "sobre", "tambien", "tanto", "tener", "tiene", "tienen", "todo",
+    "todos", "tras", "una", "unas", "uno", "unos",
+}
+
+
+def _normalize_keyword_text(value: object) -> str:
+    """
+    Limpia texto para usarlo como palabra clave visible.
+    """
+    text = str(value or "").strip()
+    text = re.sub(r"\s+", " ", text)
+    text = text.strip(" .;,:|/\\[]{}()'\"")
+    return text
+
+
+def _split_keyword_like_value(value: object, limit: int = 12) -> list[str]:
+    """
+    Convierte valores existentes de keywords/topics/concepts en una lista limpia.
+
+    Soporta:
+    - Cadenas separadas por ;, coma o |
+    - Representaciones tipo JSON/texto con display_name
+    - Listas simples o listas de diccionarios
+    """
+    if value is None:
+        return []
+
+    if isinstance(value, float) and pd.isna(value):
+        return []
+
+    extracted: list[str] = []
+
+    if isinstance(value, list):
+        for item in value:
+            if isinstance(item, dict):
+                name = item.get("display_name") or item.get("name") or item.get("title")
+                if name:
+                    extracted.append(_normalize_keyword_text(name))
+            else:
+                extracted.append(_normalize_keyword_text(item))
+    elif isinstance(value, dict):
+        name = value.get("display_name") or value.get("name") or value.get("title")
+        if name:
+            extracted.append(_normalize_keyword_text(name))
+    else:
+        text = str(value or "").strip()
+        if not text or text.lower() in {"nan", "none", "null", "[]", "{}"}:
+            return []
+
+        # Si viene serializado como objetos de OpenAlex, extrae display_name.
+        display_names = re.findall(r"['\"]display_name['\"]\s*:\s*['\"]([^'\"]+)['\"]", text)
+        if display_names:
+            extracted.extend(_normalize_keyword_text(item) for item in display_names)
+        else:
+            # Separadores habituales en metadatos exportados.
+            parts = re.split(r"\s*;\s*|\s*\|\s*|\s*,\s*", text)
+            extracted.extend(_normalize_keyword_text(part) for part in parts)
+
+    clean: list[str] = []
+    seen = set()
+
+    for item in extracted:
+        if not item:
+            continue
+
+        item = re.sub(r"[_\-]+", " ", item).strip()
+        if not item:
+            continue
+
+        key = item.lower()
+        if key in seen:
+            continue
+
+        seen.add(key)
+        clean.append(item)
+
+        if len(clean) >= limit:
+            break
+
+    return clean
+
+
+def _infer_keywords_from_text(title: object, abstract: object, limit: int = 12) -> str:
+    """
+    Genera palabras clave preliminares desde título y resumen cuando OpenAlex
+    no devuelve keywords explícitas en los metadatos recuperados.
+
+    Nota: son keywords inferidas para orientar la lectura, no sustituyen la
+    indexación oficial de una revista o base de datos.
+    """
+    source_text = f"{title or ''}. {abstract or ''}".strip()
+
+    if not source_text or source_text.lower() in {"nan", "none"}:
+        return ""
+
+    text = source_text.lower()
+    text = re.sub(r"https?://\S+|doi:\S+", " ", text)
+
+    # Frases muy frecuentes que conviene preservar como unidad conceptual.
+    phrase_replacements = {
+        "artificial intelligence": "artificial_intelligence",
+        "machine learning": "machine_learning",
+        "deep learning": "deep_learning",
+        "large language models": "large_language_models",
+        "large language model": "large_language_model",
+        "digital transformation": "digital_transformation",
+        "knowledge production": "knowledge_production",
+        "scientific creativity": "scientific_creativity",
+        "higher education": "higher_education",
+        "decision making": "decision_making",
+        "big data": "big_data",
+    }
+
+    for phrase, replacement in phrase_replacements.items():
+        text = text.replace(phrase, replacement)
+
+    tokens = re.findall(
+        r"[a-záéíóúüñ][a-záéíóúüñ_]{2,}",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    clean_tokens = []
+    for token in tokens:
+        token = token.lower().strip("_")
+        plain = token.replace("_", " ")
+
+        if plain in KEYWORD_STOPWORDS:
+            continue
+
+        if len(plain) < 4 and plain not in {"ai"}:
+            continue
+
+        clean_tokens.append(token)
+
+    if not clean_tokens:
+        return ""
+
+    counts: Counter[str] = Counter()
+
+    # Mayor peso para términos presentes en el título.
+    title_text = str(title or "").lower()
+    for token in clean_tokens:
+        term = token.replace("_", " ")
+        counts[term] += 2 if term in title_text else 1
+
+    # Bigrams orientadores.
+    for i in range(len(clean_tokens) - 1):
+        first = clean_tokens[i].replace("_", " ")
+        second = clean_tokens[i + 1].replace("_", " ")
+
+        if first in KEYWORD_STOPWORDS or second in KEYWORD_STOPWORDS:
+            continue
+
+        if first == second:
+            continue
+
+        phrase = f"{first} {second}"
+        counts[phrase] += 2
+
+    selected: list[str] = []
+
+    for term, _ in counts.most_common():
+        term = _normalize_keyword_text(term)
+
+        if not term:
+            continue
+
+        lower = term.lower()
+        if any(lower == existing.lower() for existing in selected):
+            continue
+
+        if len(term) < 4:
+            continue
+
+        selected.append(term)
+
+        if len(selected) >= limit:
+            break
+
+    return "; ".join(item.title() if item.islower() else item for item in selected)
+
+
+def _keywords_from_row(row: pd.Series, limit: int = 12) -> str:
+    """
+    Extrae keywords existentes o las infiere desde título/resumen.
+    """
+    keyword_candidate_columns = [
+        "keywords",
+        "keyword",
+        "topics",
+        "topic",
+        "concepts",
+        "concept",
+        "subjects",
+        "subject",
+        "fields_of_study",
+        "openalex_keywords",
+        "openalex_topics",
+        "openalex_concepts",
+    ]
+
+    for column in keyword_candidate_columns:
+        if column not in row.index:
+            continue
+
+        # Evita reciclar una columna keywords vacía como si fuera válida.
+        values = _split_keyword_like_value(row.get(column), limit=limit)
+
+        if values:
+            return "; ".join(values[:limit])
+
+    return _infer_keywords_from_text(
+        row.get("title", ""),
+        row.get("abstract", ""),
+        limit=limit,
+    )
+
+
+def ensure_keywords_last_column(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Garantiza que el DataFrame tenga una columna final 'keywords'.
+
+    Si OpenAlex o el módulo de búsqueda ya entrega keywords/topics/concepts,
+    las preserva y limpia. Si no existen, crea keywords preliminares inferidas
+    desde título y abstract para que el CSV descargable siempre incluya la
+    lectura temática solicitada por el usuario/financista.
+    """
+    if df is None or df.empty:
+        return pd.DataFrame() if df is None else df
+
+    enriched_df = df.copy()
+
+    enriched_df["keywords"] = enriched_df.apply(
+        lambda row: _keywords_from_row(row),
+        axis=1,
+    )
+
+    columns = [column for column in enriched_df.columns if column != "keywords"] + ["keywords"]
+    return enriched_df[columns]
+
+
 def render_results_summary(df: pd.DataFrame) -> None:
     if df.empty:
         st.warning("No se recuperaron resultados para esta búsqueda.")
@@ -814,6 +1084,8 @@ def page_buscar_tema() -> None:
                     max_results=int(max_results),
                 )
 
+                df = ensure_keywords_last_column(df)
+
             st.session_state.openalex_results = df
             st.session_state.last_query_metadata = {
                 "tema": tema,
@@ -826,6 +1098,10 @@ def page_buscar_tema() -> None:
 
             output_path = PROCESSED_DIR / "openalex_search_results.csv"
             save_results(df, output_path)
+
+            # Garantía adicional: el CSV descargable/procesado conserva
+            # 'keywords' como última columna y codificación amigable para Excel.
+            df.to_csv(output_path, index=False, encoding="utf-8-sig")
 
             country_df, continent_df = build_and_store_geographic_outputs(df)
 
@@ -877,6 +1153,12 @@ def page_buscar_tema() -> None:
     df_current = st.session_state.openalex_results
 
     if not df_current.empty:
+        df_current = ensure_keywords_last_column(df_current)
+        st.session_state.openalex_results = df_current
+
+        # Mantiene actualizado el archivo procesado con keywords al final.
+        df_current.to_csv(OPENALEX_RESULTS_PATH, index=False, encoding="utf-8-sig")
+
         st.divider()
         st.markdown("## Resultados preliminares")
 
@@ -892,6 +1174,7 @@ def page_buscar_tema() -> None:
             "cited_by_count",
             "doi",
             "landing_page_url",
+            "keywords",
         ]
 
         available_columns = [
@@ -1185,6 +1468,9 @@ def page_publicaciones() -> None:
         st.warning("Todavía no hay resultados. Primero realiza una búsqueda en la sección 'Buscar tema'.")
         return
 
+    df = ensure_keywords_last_column(df)
+    st.session_state.openalex_results = df
+
     display_columns = [
         "title",
         "publication_year",
@@ -1193,6 +1479,7 @@ def page_publicaciones() -> None:
         "doi",
         "landing_page_url",
         "abstract",
+        "keywords",
     ]
 
     available_columns = [column for column in display_columns if column in df.columns]
