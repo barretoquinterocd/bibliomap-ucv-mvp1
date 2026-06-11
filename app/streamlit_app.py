@@ -1,4 +1,5 @@
 from pathlib import Path
+import base64
 from typing import Optional
 from collections import Counter
 import re
@@ -95,6 +96,23 @@ def show_image(path: Path, width: Optional[int] = None, caption: Optional[str] =
         st.image(str(path), width=width, caption=caption)
     else:
         st.warning(f"No se encontró el archivo: {path.name}")
+
+
+def show_centered_image(path: Path, width: int = 310, alt: str = "logo") -> None:
+    """Muestra una imagen centrada con HTML para evitar alineación izquierda de st.image dentro de columnas."""
+    if not path.exists():
+        st.warning(f"No se encontró el archivo: {path.name}")
+        return
+
+    suffix = path.suffix.lower().replace(".", "") or "png"
+    mime = "jpeg" if suffix in {"jpg", "jpeg"} else suffix
+    encoded = base64.b64encode(path.read_bytes()).decode("utf-8")
+    html = f'''
+    <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin: 0.3rem 0 0.8rem 0;">
+        <img src="data:image/{mime};base64,{encoded}" alt="{alt}" style="width: {width}px; max-width: 100%; height: auto; display: block;" />
+    </div>
+    '''
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def first_existing_path(*paths: Path) -> Optional[Path]:
@@ -257,10 +275,7 @@ def render_sidebar() -> str:
 
 
 def render_header() -> None:
-    _, center_col, _ = st.columns([1, 2, 1])
-
-    with center_col:
-        show_image(LOGO_BIBLIOINTEL, width=310)
+    show_centered_image(LOGO_BIBLIOINTEL, width=310, alt="BiblioIntel")
 
     st.markdown(
         f'<div class="reference-note">{REFERENCE_NOTE}</div>',
